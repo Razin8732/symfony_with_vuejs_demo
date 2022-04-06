@@ -11,6 +11,7 @@
         "doctrine/doctrine-bundle": "^2.6",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
+        "friendsofsymfony/rest-bundle": "^3.3",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.4",
         "sensio/framework-extra-bundle": "^6.1",
@@ -41,7 +42,7 @@
         "symfony/validator": "6.0.*",
         "symfony/web-link": "6.0.*",
         "symfony/webapp-meta": "^1.0",
-        "symfony/webpack-encore-bundle": "^1.12",
+        "symfony/webpack-encore-bundle": "^1.14",
         "symfony/yaml": "6.0.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
@@ -50,7 +51,8 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         },
         "optimize-autoloader": true,
         "preferred-install": {
@@ -81,6 +83,8 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
+        "csfix": "phpcbf --ignore=src/Migrations/**,src/Kernel.php",
+        "cscheck": "phpcs --ignore=src/Migrations/**,src/Kernel.php",
         "post-install-cmd": [
             "@auto-scripts"
         ],
@@ -98,6 +102,8 @@
         }
     },
     "require-dev": {
+        "doctrine/coding-standard": "^9.0",
+        "squizlabs/php_codesniffer": "^3.6",
         "symfony/debug-bundle": "6.0.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/stopwatch": "6.0.*",
