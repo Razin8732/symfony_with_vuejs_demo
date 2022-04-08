@@ -5,7 +5,10 @@
         <h1>Posts</h1>
       </div>
     </div>
-    <div class="row">
+    <div
+      v-if="canCreatePost"
+      class="row"
+    >
       <form>
         <div class="form-row">
           <div class="col-md-8">
@@ -21,6 +24,15 @@
               name="description"
               class="form-control mt-2"
               placeholder="Description"
+            />
+
+            <b-form-file
+              v-model="file"
+              placeholder="File"
+              accept="image/*"
+              plain
+              class="form-control mt-2"
+              @change="onFileChange"
             />
           </div>
           <div class="col-md-4">
@@ -48,14 +60,9 @@
       </div>
       <div
         v-else-if="hasError"
-        class="col-12"
+        class="row col"
       >
-        <div
-          class="alert alert-danger"
-          role="alert"
-        >
-          {{ error }}
-        </div>
+        <error-message :error="error" />
       </div>
       <div
         v-else-if="!hasPosts"
@@ -72,6 +79,7 @@
         <PostComponent
           :title="post.title"
           :description="post.description"
+          :data-file="post.file"
         />
       </div>
     </div>
@@ -81,15 +89,19 @@
 
 <script>
 import PostComponent from "../components/PostComponent";
+import ErrorMessage from "../components/ErrorMessage";
+
 export default {
   name: "Post",
   components: {
     PostComponent,
+    ErrorMessage,
   },
   data() {
     return {
       title: "",
       description: "",
+      file: [],
     };
   },
   computed: {
@@ -108,20 +120,29 @@ export default {
     posts() {
       return this.$store.getters["post/posts"];
     },
+    canCreatePost() {
+      return this.$store.getters["security/hasRole"]("ROLE_USER");
+    },
   },
   created() {
     this.$store.dispatch("post/getAllPosts");
   },
   methods: {
     async create() {
-      const result = await this.$store.dispatch("post/create", {
-        title: this.$data.title,
-        description: this.$data.description,
-      });
+      let formData = new FormData();
+      formData.append("title", this.title);
+      formData.append("description", this.description);
+      formData.append("file", this.file);
+      const result = await this.$store.dispatch("post/create", formData);
       if (result != null) {
         this.$data.title = "";
         this.$data.description = "";
+        this.$data.file = [];
       }
+    },
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
     },
   },
 };

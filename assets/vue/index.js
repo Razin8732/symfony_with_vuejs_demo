@@ -7,8 +7,11 @@ import '../styles/app.scss';
 
 // start the Stimulus application
 import 'bootstrap';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 new Vue({
   components: { App },
   template: "<App/>",
