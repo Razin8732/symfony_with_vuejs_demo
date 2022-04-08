@@ -32,12 +32,31 @@
             <a class="nav-link">Home</a>
           </router-link>
           <router-link
+            v-if="isAuthenticated"
             class="nav-item"
             tag="li"
             to="/posts"
             active-class="active"
           >
             <a class="nav-link">Posts</a>
+          </router-link>
+          <router-link
+            v-if="isAuthenticated"
+            class="nav-item"
+            tag="li"
+            to="/students"
+            active-class="active"
+          >
+            <a class="nav-link">Students</a>
+          </router-link>
+          <router-link
+            v-if="isAuthenticated == false"
+            class="nav-item"
+            tag="li"
+            to="/login"
+            active-class="active"
+          >
+            <a class="nav-link">Login</a>
           </router-link>
           <li
             v-if="isAuthenticated"
@@ -57,35 +76,43 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 export default {
-  name: "App",
+  name: 'App',
   computed: {
     isAuthenticated() {
-      return this.$store.getters["security/isAuthenticated"];
+      return this.$store.getters['security/isAuthenticated']
     },
   },
   created() {
     let isAuthenticated = JSON.parse(
-        this.$parent.$el.attributes["data-is-authenticated"].value
+        this.$parent.$el.attributes['data-is-authenticated'].value,
       ),
-      user = JSON.parse(this.$parent.$el.attributes["data-user"].value);
+      user = JSON.parse(this.$parent.$el.attributes['data-user'].value)
 
-    let payload = { isAuthenticated: isAuthenticated, user: user };
-    this.$store.dispatch("security/onRefresh", payload);
+    let payload = { isAuthenticated: isAuthenticated, user: user }
+    this.$store.dispatch('security/onRefresh', payload)
 
     axios.interceptors.response.use(undefined, (err) => {
+      if (err.response.status === 401) {
+        // this.$router.push({ path: '/api/security/logout' })
+        window.location.href = '/login';
+      }
       return new Promise(() => {
-        if (err.response.status === 401) {
-          this.$router.push({ path: "/login" });
-        } else if (err.response.status === 500) {
-          document.open();
-          document.write(err.response.data);
-          document.close();
+        if (err.response.status === 500) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Internal Server Error',
+            icon: 'error',
+          })
+          // document.open()
+          // document.write(err.response.data)
+          // document.close()
         }
-        throw err;
-      });
-    });
+        throw err
+      })
+    })
   },
-};
+}
 </script>

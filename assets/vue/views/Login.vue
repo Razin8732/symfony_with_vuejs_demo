@@ -6,27 +6,26 @@
     <div class="col-md-12">
       <form>
         <div class="row">
-          <div class="col-md-6 ml-2">
+          <div class="col-md-12 ml-2">
             <input
               v-model="username"
               type="text"
-              class="form-control"
+              class="form-control w-50 mt-2"
             >
-          </div>
-          <div class="col-md-6 ml-2">
+
             <input
               v-model="password"
               type="password"
-              class="form-control"
+              class="form-control w-50 mt-3 "
             >
           </div>
-          <div class="col-md-6 ml-2">
+          <div class="col-md-6 ml-2 mt-3">
             <button
               :disabled="
                 username.length === 0 || password.length === 0 || isLoading
               "
               type="button"
-              class="btn btn-primary"
+              class="btn btn-lg btn-primary"
               @click="performLogin()"
             >
               Login
@@ -53,37 +52,37 @@
 </template>
 
 <script>
-import ErrorComponent from "../components/ErrorMessage";
+import ErrorComponent from '../components/ErrorMessage'
 export default {
-  name: "Login",
+  name: 'Login',
   components: {
     ErrorComponent,
   },
   data() {
     return {
-      username: "",
-      password: "",
-    };
+      username: '',
+      password: '',
+    }
   },
   computed: {
     isLoading() {
-      return this.$store.getters["security/isLoading"];
+      return this.$store.getters['security/isLoading']
     },
     hasError() {
-      return this.$store.getters["security/hasError"];
+      return this.$store.getters['security/hasError']
     },
     error() {
-      return this.$store.getters["security/error"];
+      return this.$store.getters['security/error']
     },
   },
 
   created() {
-    let redirect = this.$route.query.redirect;
-    if (this.$store.getters["security/isAuthenticated"]) {
-      if (typeof redirect !== "undefined") {
-        this.$router.push({ path: redirect });
+    let redirect = this.$route.query.redirect
+    if (this.$store.getters['security/isAuthenticated']) {
+      if (typeof redirect !== 'undefined') {
+        this.$router.push({ path: redirect })
       } else {
-        this.$router.push({ path: "/home" });
+        this.$router.push({ path: '/login' })
       }
     }
   },
@@ -94,16 +93,16 @@ export default {
           username: this.$data.username,
           password: this.$data.password,
         },
-        redirect = this.$route.query.redirect;
-      await this.$store.dispatch("security/login", payload);
-      if (!this.$store.getters["security/hasError"]) {
-        if (typeof redirect !== "undefined") {
-          this.$router.push({ path: redirect });
+        redirect = this.$route.query.redirect
+      await this.$store.dispatch('security/login', payload)
+      if (!this.$store.getters['security/hasError']) {
+        if (typeof redirect !== 'undefined') {
+          this.$router.push({ path: redirect })
         } else {
-          this.$router.push({ path: "/home" });
+          this.$router.push({ path: '/home' })
         }
       }
     },
   },
-};
+}
 </script>

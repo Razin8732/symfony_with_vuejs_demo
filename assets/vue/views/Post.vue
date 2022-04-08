@@ -50,6 +50,13 @@
         </div>
       </form>
     </div>
+    <div v-else>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>You don't have permission to create post.</h3>
+        </div>
+      </div>
+    </div>
 
     <div class="row">
       <div
