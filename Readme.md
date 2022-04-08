@@ -1,7 +1,7 @@
 # Project Setup 
 ### Clone Reposetory
 - `git clone https://github.com/RazinTeqB/symfony_with_vuejs_demo.git`
-
+- `cd symfony_with_vuejs_demo`
 ### Install composer package
 - `Composer install`
 
@@ -12,7 +12,7 @@
 - `php bin/console doctrine:schema:update --force`
 
 ### Start symfony server
-- `symfony server:start -d`
+- `symfony server:start -d` or `php bin/console server:run`
 
 ### Install node packages
 - `sudo yarn install`
