@@ -25,6 +25,15 @@
               class="form-control mt-2"
               placeholder="Description"
             />
+
+            <b-form-file
+              v-model="file"
+              placeholder="File"
+              accept="image/*"
+              plain
+              class="form-control mt-2"
+              @change="onFileChange"
+            />
           </div>
           <div class="col-md-4">
             <button
@@ -70,6 +79,7 @@
         <PostComponent
           :title="post.title"
           :description="post.description"
+          :data-file="post.file"
         />
       </div>
     </div>
@@ -91,6 +101,7 @@ export default {
     return {
       title: "",
       description: "",
+      file: [],
     };
   },
   computed: {
@@ -118,14 +129,20 @@ export default {
   },
   methods: {
     async create() {
-      const result = await this.$store.dispatch("post/create", {
-        title: this.$data.title,
-        description: this.$data.description,
-      });
+      let formData = new FormData();
+      formData.append("title", this.title);
+      formData.append("description", this.description);
+      formData.append("file", this.file);
+      const result = await this.$store.dispatch("post/create", formData);
       if (result != null) {
         this.$data.title = "";
         this.$data.description = "";
+        this.$data.file = [];
       }
+    },
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
     },
   },
 };

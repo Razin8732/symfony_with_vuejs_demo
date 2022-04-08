@@ -36,14 +36,28 @@ class PostController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function createAction(Request $request): JsonResponse
     {
-        $input = (object) json_decode($request->getContent(), true);
+        // $input = (object) json_decode($request->getContent(), true);
 
+        $files = $request->files->all();
+        $input = $request->request->all();
+
+        $uid = uniqid();
         $post = new Post();
-        $post->setTitle($input->title);
-        $post->setDescription($input->description);
-
+        $post->setTitle($input['title']);
+        $post->setDescription($input['description']);
+        $post->setFile($uid . '_' . $files['file']->getClientOriginalName());
         $this->em->persist($post);
         $this->em->flush();
+
+        foreach ($files as $key => $value) {
+            $tempFile = $value;
+            if (!is_file($tempFile)) {
+                continue;
+            }
+
+            $tempFile->move(getcwd() . '/uploads', $uid . '_' . $value->getClientOriginalName());
+        }
+
         $data = $this->serializer->serialize($post, JsonEncoder::FORMAT);
         return new JsonResponse($data, Response::HTTP_CREATED, [], true);
     }
