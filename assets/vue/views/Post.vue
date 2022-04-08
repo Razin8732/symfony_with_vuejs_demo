@@ -5,7 +5,10 @@
         <h1>Posts</h1>
       </div>
     </div>
-    <div class="row">
+    <div
+      v-if="canCreatePost"
+      class="row"
+    >
       <form>
         <div class="form-row">
           <div class="col-md-8">
@@ -48,14 +51,9 @@
       </div>
       <div
         v-else-if="hasError"
-        class="col-12"
+        class="row col"
       >
-        <div
-          class="alert alert-danger"
-          role="alert"
-        >
-          {{ error }}
-        </div>
+        <error-message :error="error" />
       </div>
       <div
         v-else-if="!hasPosts"
@@ -81,10 +79,13 @@
 
 <script>
 import PostComponent from "../components/PostComponent";
+import ErrorMessage from "../components/ErrorMessage";
+
 export default {
   name: "Post",
   components: {
     PostComponent,
+    ErrorMessage,
   },
   data() {
     return {
@@ -107,6 +108,9 @@ export default {
     },
     posts() {
       return this.$store.getters["post/posts"];
+    },
+    canCreatePost() {
+      return this.$store.getters["security/hasRole"]("ROLE_USER");
     },
   },
   created() {

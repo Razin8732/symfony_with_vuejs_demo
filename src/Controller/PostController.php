@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -16,6 +17,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 
 #[Rest\Route("/api")]
+#[IsGranted("IS_AUTHENTICATED_FULLY")]
 class PostController extends AbstractController
 {
     /** @var EntityManagerInterface */
@@ -31,6 +33,7 @@ class PostController extends AbstractController
     }
 
     #[Rest\Post("/posts", name: "createPost")]
+    #[IsGranted("ROLE_USER")]
     public function createAction(Request $request): JsonResponse
     {
         $input = (object) json_decode($request->getContent(), true);

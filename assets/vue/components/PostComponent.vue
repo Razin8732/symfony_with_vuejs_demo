@@ -13,14 +13,12 @@
       </div>
     </div>
   </div> -->
-  <div class="col-md-3">
-    <div class="row">
-      <div class="col-md-12">
-        {{ title }}
-      </div>
-      <div class="col-md-12 mt-2">
-        {{ description }}
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{ title }}
+    </div>
+    <div class="col-md-12 mt-2">
+      {{ description }}
     </div>
   </div>
 </template>
