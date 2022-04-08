@@ -7,11 +7,18 @@ import '../styles/app.scss';
 
 // start the Stimulus application
 import 'bootstrap';
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-
+import BootstrapVue from 'bootstrap-vue'
+import moment from 'moment';
 
 Vue.use(BootstrapVue);
-Vue.use(IconsPlugin);
+
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('Do MMM YYYY')
+  }
+});
+
+
 new Vue({
   components: { App },
   template: "<App/>",
